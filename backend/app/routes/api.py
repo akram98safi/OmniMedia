@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 import aiofiles
-from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Header, status
+from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Header, Request, status
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
@@ -272,6 +272,24 @@ def _validate_process_options(operation: str, options: Dict[str, Any], duration:
     if "trim_start" in options and "trim_end" in options:
         if float(options["trim_end"]) <= float(options["trim_start"]):
             raise HTTPException(status_code=400, detail="Trim end must be after trim start.")
+
+
+class VisitBeaconRequest(BaseModel):
+    visitor_id: str
+    path: str = "/"
+
+
+@router.post("/analytics/visit")
+async def record_client_visit(req: VisitBeaconRequest, request: Request):
+    """Record a verified client-side browser visit (triggered only by JS execution)."""
+    user_agent = request.headers.get("user-agent", "")
+    analytics.record_visit(
+        visitor_id=req.visitor_id,
+        path=req.path,
+        user_agent=user_agent,
+        is_verified_human=True,
+    )
+    return {"status": "ok"}
 
 
 @router.get("/stats/public")

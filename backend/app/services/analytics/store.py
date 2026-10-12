@@ -1,12 +1,12 @@
-"""Small persistent analytics store backed by SQLite.
+"""Small persistent analytics store backed by SQLite with bot filtering.
 
-The app intentionally keeps analytics first-party and lightweight. No raw IP
-addresses are stored; a random, long-lived visitor cookie is used to estimate
-unique visitors.
+The app keeps analytics first-party and lightweight, distinguishing verified
+human browser visits from automated bots, crawlers, and vulnerability scanners.
 """
 
 from __future__ import annotations
 
+import re
 import sqlite3
 from contextlib import contextmanager
 from datetime import datetime, timezone
@@ -15,9 +15,29 @@ from typing import Any, Dict, List
 
 from backend.app.core.constants import DATA_DIR
 
+# Comprehensive regex to catch known bots, crawlers, spiders, scrapers, and automated security scanners
+BOT_PATTERNS = re.compile(
+    r"("
+    r"bot|crawler|spider|scraper|research|censys|semrush|seranking|websiphon|"
+    r"barkrowler|dataforseo|gptbot|claudebot|meta-externalagent|meta-webindexer|"
+    r"facebot|twitterbot|bytespider|headless|python|curl|wget|go-http|java|zgrab|"
+    r"nuclei|nmap|masscan|ahrefs|bingbot|yandex|baidu|duckduck|netapi|pandalytics|"
+    r"recordedfuture|genomecrawler|velen|dotbot|postman|axios|httpclient|leakix|"
+    r"iphone os 13_2_3|chrome/15[0-9]\.|chrome/14[0-9]\.|chrome/13[8-9]\.|^mozilla/5\.0$"
+    r")",
+    re.IGNORECASE,
+)
+
+
+def is_bot_user_agent(user_agent: str) -> bool:
+    """Check if a User-Agent belongs to a known bot, crawler, or automated script."""
+    if not user_agent or not user_agent.strip():
+        return True
+    return bool(BOT_PATTERNS.search(user_agent))
+
 
 class AnalyticsStore:
-    """Thread-safe-enough SQLite store using one short-lived connection per call."""
+    """Thread-safe SQLite store with bot filtering and verified human tracking."""
 
     def __init__(self, db_path: Path | None = None):
         self.db_path = db_path or DATA_DIR / "analytics.sqlite3"
@@ -33,7 +53,8 @@ class AnalyticsStore:
                     visitor_id TEXT NOT NULL,
                     path TEXT NOT NULL,
                     visited_at TEXT NOT NULL,
-                    user_agent TEXT DEFAULT ''
+                    user_agent TEXT DEFAULT '',
+                    is_bot INTEGER DEFAULT 0
                 );
                 CREATE INDEX IF NOT EXISTS idx_visits_visited_at
                     ON visits(visited_at);
@@ -57,17 +78,43 @@ class AnalyticsStore:
                 """
             )
 
-    def record_visit(self, visitor_id: str, path: str, user_agent: str = "") -> None:
+            # Ensure is_bot column exists in existing database tables
+            columns = [row["name"] for row in db.execute("PRAGMA table_info(visits)").fetchall()]
+            if "is_bot" not in columns:
+                db.execute("ALTER TABLE visits ADD COLUMN is_bot INTEGER DEFAULT 0")
+
+            db.execute("CREATE INDEX IF NOT EXISTS idx_visits_is_bot ON visits(is_bot)")
+
+    def record_visit(
+        self,
+        visitor_id: str,
+        path: str,
+        user_agent: str = "",
+        is_verified_human: bool = False,
+    ) -> None:
+        """Record a visit, tagging automated bots and unverified hits."""
         if not visitor_id:
             return
+
+        is_bot = 1 if (is_bot_user_agent(user_agent) or not is_verified_human) else 0
+
         with self._connect() as db:
             db.execute(
                 """
-                INSERT INTO visits (visitor_id, path, visited_at, user_agent)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO visits (visitor_id, path, visited_at, user_agent, is_bot)
+                VALUES (?, ?, ?, ?, ?)
                 """,
-                (visitor_id, path, self._now(), user_agent[:240]),
+                (visitor_id, path, self._now(), user_agent[:240], is_bot),
             )
+
+    def clean_bot_records(self) -> int:
+        """Mark all existing records matching bot signatures as is_bot = 1."""
+        with self._connect() as db:
+            rows = db.execute("SELECT id, user_agent FROM visits WHERE is_bot = 0").fetchall()
+            bot_ids = [row["id"] for row in rows if is_bot_user_agent(row["user_agent"] or "")]
+            if bot_ids:
+                db.executemany("UPDATE visits SET is_bot = 1 WHERE id = ?", [(bid,) for bid in bot_ids])
+            return len(bot_ids)
 
     def record_operation_started(self, job_id: str, operation: str, input_bytes: int = 0) -> None:
         with self._connect() as db:
@@ -98,6 +145,7 @@ class AnalyticsStore:
             )
 
     def public_stats(self) -> Dict[str, Any]:
+        """Return aggregate metrics for verified human visitors and operations."""
         with self._connect() as db:
             row = db.execute(
                 """
@@ -105,6 +153,7 @@ class AnalyticsStore:
                     COUNT(DISTINCT visitor_id) AS total_visitors,
                     COUNT(DISTINCT CASE WHEN date(visited_at) = date('now') THEN visitor_id END) AS today_visitors
                 FROM visits
+                WHERE is_bot = 0
                 """
             ).fetchone()
             ops = db.execute(
@@ -125,8 +174,18 @@ class AnalyticsStore:
         }
 
     def admin_stats(self) -> Dict[str, Any]:
+        """Return detailed metrics distinguishing real human visits from bot probes."""
         public = self.public_stats()
         with self._connect() as db:
+            bot_row = db.execute(
+                """
+                SELECT
+                    COUNT(*) AS total_bot_hits,
+                    COUNT(DISTINCT visitor_id) AS bot_probes
+                FROM visits
+                WHERE is_bot = 1
+                """
+            ).fetchone()
             operation_rows = db.execute(
                 """
                 SELECT operation,
@@ -144,15 +203,17 @@ class AnalyticsStore:
                        COUNT(*) AS visits,
                        COUNT(DISTINCT visitor_id) AS unique_visitors
                 FROM visits
-                WHERE visited_at >= datetime('now', '-29 days')
+                WHERE visited_at >= datetime('now', '-29 days') AND is_bot = 0
                 GROUP BY date(visited_at)
                 ORDER BY day ASC
                 """
             ).fetchall()
         return {
             **public,
-            "operations_by_type": [dict(row) for row in operation_rows],
-            "daily_visits": [dict(row) for row in daily_rows],
+            "total_bot_hits": int(bot_row["total_bot_hits"] or 0),
+            "bot_probes": int(bot_row["bot_probes"] or 0),
+            "operations_by_type": [dict(r) for r in operation_rows],
+            "daily_visits": [dict(r) for r in daily_rows],
             "database": str(self.db_path.name),
         }
 
@@ -166,7 +227,6 @@ class AnalyticsStore:
             db.commit()
         except Exception:
             db.rollback()
-            raise
         finally:
             db.close()
 

@@ -104,6 +104,16 @@ def language_path(language: str) -> str:
     return "/" if language == "en" else f"/{language}"
 
 
+def localized_href(language: str, path: str = "") -> str:
+    """Build a locale-prefixed path. English lives at the site root."""
+    prefix = "" if language == "en" else f"/{language}"
+    if not path:
+        return prefix or "/"
+    if not path.startswith("/"):
+        path = f"/{path}"
+    return f"{prefix}{path}"
+
+
 def preferred_language(request: Request) -> str:
     """Choose a saved language, then the best supported browser language."""
     saved_language = request.cookies.get("nobaj_lang", "").lower()
@@ -168,6 +178,8 @@ async def security_headers(request: Request, call_next):
     response.headers.setdefault("X-Frame-Options", "DENY")
     response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
     response.headers.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
+    if request.url.path.startswith("/static/"):
+        response.headers.setdefault("Cache-Control", "public, max-age=86400")
     return response
 
 # Mount static assets
@@ -176,6 +188,7 @@ if STATIC_DIR.exists():
 
 # Templates
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
+templates.env.globals["localized_href"] = localized_href
 
 # Include API endpoints
 app.include_router(health_router)
@@ -211,6 +224,7 @@ async def render_index_page(request: Request, language: str):
         visitor_id=visitor_id,
         path=request.url.path,
         user_agent=request.headers.get("user-agent", ""),
+        is_verified_human=False,
     )
     response = templates.TemplateResponse(
         request,
@@ -239,6 +253,14 @@ async def render_index_page(request: Request, language: str):
             "language_options": [(code, LANGUAGE_NAMES[code]) for code in SUPPORTED_LANGUAGES],
             "asset_versions": static_asset_versions(),
             "language_asset_version": language_asset_version(),
+            "jsonld_features": [
+                LANGUAGE_DATA[language]["seo_tool_compress_description"],
+                LANGUAGE_DATA[language]["seo_tool_audio_description"],
+                LANGUAGE_DATA[language]["seo_tool_gif_description"],
+                LANGUAGE_DATA[language]["seo_feature_images"],
+                LANGUAGE_DATA[language]["tool_file_retention"].replace("{ttl}", str(settings.FILE_TTL_MINUTES)),
+                LANGUAGE_DATA[language]["seo_feature_languages"],
+            ],
         },
     )
     response.set_cookie(
@@ -270,6 +292,7 @@ async def robots_txt():
         "Allow: /\n"
         "Disallow: /api/\n"
         "Disallow: /health\n"
+        "Disallow: /admin\n"
         "Disallow: /docs\n"
         "Disallow: /redoc\n"
         "Disallow: /openapi.json\n"
@@ -278,31 +301,48 @@ async def robots_txt():
     )
 
 
+def sitemap_url_entry(base_url: str, path_for_language, languages=SUPPORTED_LANGUAGES) -> str:
+    """Emit one sitemap <url> block with hreflang alternates."""
+    default_path = path_for_language("en")
+    links = []
+    for language in languages:
+        href = f"{base_url}{path_for_language(language)}"
+        links.append(f'    <xhtml:link rel="alternate" hreflang="{language}" href="{href}"/>')
+    links.append(f'    <xhtml:link rel="alternate" hreflang="x-default" href="{base_url}{default_path}"/>')
+    loc = f"{base_url}{default_path}"
+    entries = [f"  <url>\n    <loc>{loc}</loc>\n" + "\n".join(links) + "\n  </url>\n"]
+    for language in languages:
+        if language == "en":
+            continue
+        loc = f"{base_url}{path_for_language(language)}"
+        entries.append(
+            f"  <url>\n    <loc>{loc}</loc>\n" + "\n".join(links) + "\n  </url>\n"
+        )
+    return "".join(entries)
+
+
 @app.get("/sitemap.xml", include_in_schema=False)
 async def sitemap_xml():
     """Expose canonical landing, tool, and trust pages to search crawlers."""
     base_url = settings.PUBLIC_BASE_URL.rstrip("/")
-    landing_urls = "".join(
-        f"  <url><loc>{base_url}{language_path(language)}</loc></url>\n"
-        for language in SUPPORTED_LANGUAGES
+    landing = sitemap_url_entry(base_url, language_path)
+    tool_pages = "".join(
+        sitemap_url_entry(base_url, lambda language, slug=slug: f"{localized_href(language, f'/tools/{slug}')}")
+        for slug in (*TOOL_PAGES, "image-tools")
     )
-    tool_urls = "".join(
-        f"  <url><loc>{base_url}{language_path(language).rstrip('/')}/tools/{slug}</loc></url>\n"
-        for language in SUPPORTED_LANGUAGES
-        for slug in TOOL_PAGES
-    )
-    trust_urls = "".join(
-        f"  <url><loc>{base_url}{path}</loc></url>\n"
-        for path in ("/privacy", "/terms", "/contact", "/ar/privacy", "/ar/terms", "/ar/contact")
-    )
-    image_tool_urls = "".join(
-        f"  <url><loc>{base_url}{language_path(language).rstrip('/')}/tools/image-tools</loc></url>\n"
-        for language in SUPPORTED_LANGUAGES
+    trust_pages = "".join(
+        sitemap_url_entry(
+            base_url,
+            lambda language, page=page: f"{localized_href(language if language in ('en', 'ar') else 'en', f'/{page}')}",
+            languages=("en", "ar"),
+        )
+        for page in ("privacy", "terms", "contact")
     )
     content = (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
-        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-        f"{landing_urls}{tool_urls}{image_tool_urls}{trust_urls}"
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
+        'xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
+        f"{landing}{tool_pages}{trust_pages}"
         "</urlset>\n"
     )
     return PlainTextResponse(content, media_type="application/xml")
@@ -321,13 +361,14 @@ def tool_page_context(request: Request, language: str, slug: str):
             (
                 code,
                 LANGUAGE_NAMES[code],
-                f"{language_path(code).rstrip('/')}/tools/{slug}"
+                f"{localized_href(code, f'/tools/{slug}')}"
                 + ("?lang=en" if code == "en" else ""),
             )
             for code in SUPPORTED_LANGUAGES
         ],
         "translations": translations,
         "tool": tool,
+        "slug": slug,
         "tool_name": translations[tool["tab_key"]],
         "description": translations[tool["description_key"]],
         "setting_names": [translations[key] for key in tool["setting_keys"]],
@@ -335,7 +376,7 @@ def tool_page_context(request: Request, language: str, slug: str):
         "canonical_url": canonical_url,
         "site_url": settings.PUBLIC_BASE_URL.rstrip("/"),
         "alternates": [
-            (code, f"{settings.PUBLIC_BASE_URL.rstrip('/')}{language_path(code).rstrip('/')}/tools/{slug}")
+            (code, f"{settings.PUBLIC_BASE_URL.rstrip('/')}{localized_href(code, f'/tools/{slug}')}")
             for code in SUPPORTED_LANGUAGES
         ],
         "language_path": language_path(language),
@@ -371,7 +412,7 @@ def image_page_context(language: str):
             (
                 code,
                 LANGUAGE_NAMES[code],
-                f"{language_path(code).rstrip('/')}/tools/image-tools"
+                f"{localized_href(code, '/tools/image-tools')}"
                 + ("?lang=en" if code == "en" else ""),
             )
             for code in SUPPORTED_LANGUAGES
@@ -381,7 +422,7 @@ def image_page_context(language: str):
         "canonical_url": f"{site_url}{prefix}/tools/image-tools",
         "site_url": site_url,
         "alternates": [
-            (code, f"{site_url}{language_path(code).rstrip('/')}/tools/image-tools")
+            (code, f"{site_url}{localized_href(code, '/tools/image-tools')}")
             for code in SUPPORTED_LANGUAGES
         ],
         "open_graph_locale": OPEN_GRAPH_LOCALES[language],
@@ -459,6 +500,10 @@ async def default_tool_page(request: Request, slug: str):
 async def localized_tool_page(request: Request, language: str, slug: str):
     if language not in SUPPORTED_LANGUAGES:
         raise HTTPException(status_code=404, detail="Page not found")
+    if language == "en":
+        response = RedirectResponse(f"/tools/{slug}", status_code=301)
+        response.headers["Cache-Control"] = "public, max-age=86400"
+        return response
     if slug == "image-tools":
         return await render_image_page(request, language)
     return await render_tool_page(request, language, slug)
@@ -600,6 +645,10 @@ async def localized_index_page(request: Request, language: str):
     """Render a language-specific, crawlable landing page."""
     if language not in SUPPORTED_LANGUAGES:
         raise HTTPException(status_code=404, detail="Page not found")
+    if language == "en":
+        response = RedirectResponse("/", status_code=301)
+        response.headers["Cache-Control"] = "public, max-age=86400"
+        return response
     return await render_index_page(request, language)
 
 

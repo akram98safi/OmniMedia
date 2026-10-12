@@ -16,8 +16,8 @@ class Settings(BaseSettings):
     )
 
     # General
-    APP_NAME: str = "Nobaj"
-    APP_DESCRIPTION: str = "Modern High-Performance Online Media Suite"
+    APP_NAME: str = "Nobaj Media Cloud"
+    APP_DESCRIPTION: str = "All-in-One Online Video, Audio & Image Processing Cloud Suite"
     PUBLIC_BASE_URL: str = "https://nobaj.com"
     VERSION: str = "1.0.0"
     DEBUG: bool = False

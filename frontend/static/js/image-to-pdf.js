@@ -1,6 +1,7 @@
 (() => {
   const copy = JSON.parse(document.getElementById('image-copy')?.textContent || '{}');
   const input = document.getElementById('pdf-images');
+  const inputName = document.getElementById('pdf-files-name');
   const list = document.getElementById('pdf-image-list');
   const button = document.getElementById('pdf-generate');
   const status = document.getElementById('pdf-status');
@@ -25,6 +26,11 @@
 
   function renderList() {
     list.replaceChildren();
+    if (inputName) {
+      inputName.textContent = files.length
+        ? copy.image_pdf_count.replace('{count}', String(files.length))
+        : input.dataset.emptyText || '';
+    }
     files.forEach((file, index) => {
       const item = document.createElement('li');
       item.className = 'image-pdf-list-item';

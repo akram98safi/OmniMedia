@@ -1,6 +1,7 @@
 (() => {
   const copy = JSON.parse(document.getElementById('image-copy')?.textContent || '{}');
   const input = document.getElementById('favicon-file');
+  const inputName = document.getElementById('favicon-file-name');
   const button = document.getElementById('favicon-generate');
   const result = document.getElementById('favicon-result');
   const icoLink = document.getElementById('favicon-download');
@@ -79,16 +80,20 @@
   }
 
   input.addEventListener('change', async () => {
+    const selectedFile = input.files?.[0];
+    if (inputName) inputName.textContent = selectedFile?.name || input.dataset.emptyText || '';
     clearOutput();
     status.textContent = '';
     if (image) image.close();
     image = null;
+    if (!selectedFile) return;
     try {
-      await readImage(input.files?.[0]);
+      await readImage(selectedFile);
       status.textContent = copy.image_status_ready;
     } catch (error) {
       status.textContent = error.message || copy.image_error_process;
       input.value = '';
+      if (inputName) inputName.textContent = input.dataset.emptyText || '';
     }
   });
 

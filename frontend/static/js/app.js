@@ -45,12 +45,39 @@ document.addEventListener('DOMContentLoaded', () => {
   setupTabs();
   setupDragAndDrop();
   setupEventListeners();
+  sendVisitorHeartbeat();
   if ('requestIdleCallback' in window) {
     window.requestIdleCallback(loadPublicStats, { timeout: 1200 });
   } else {
     window.setTimeout(loadPublicStats, 300);
   }
 });
+
+function sendVisitorHeartbeat() {
+  try {
+    let visitorId = localStorage.getItem('nobaj_visitor_id');
+    if (!visitorId) {
+      visitorId = 'v_' + Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
+      localStorage.setItem('nobaj_visitor_id', visitorId);
+    }
+    const payload = JSON.stringify({
+      visitor_id: visitorId,
+      path: window.location.pathname || '/'
+    });
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon('/api/analytics/visit', new Blob([payload], { type: 'application/json' }));
+    } else {
+      fetch('/api/analytics/visit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: payload,
+        keepalive: true
+      }).catch(() => {});
+    }
+  } catch (e) {
+    // Graceful fallback
+  }
+}
 
 function setupLanguage() {
   const htmlEl = document.documentElement;

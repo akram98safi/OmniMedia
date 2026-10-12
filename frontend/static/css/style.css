@@ -970,6 +970,7 @@ select:focus, input:focus {
 
 .image-extra-grid {
   display: grid;
+  align-items: start;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
 }
@@ -980,8 +981,63 @@ select:focus, input:focus {
 
 .image-extra-controls {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 1rem 0.85rem;
+}
+
+.image-extra-controls > label {
+  display: block;
+  min-width: 0;
+  line-height: 1.45;
+}
+
+.image-extra-controls select {
+  min-height: 2.75rem;
+}
+
+.image-file-picker {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 0.75rem;
+  cursor: pointer;
+}
+
+.image-file-picker-button {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(167, 139, 250, 0.32);
+  border-radius: 0.75rem;
+  background: rgba(139, 92, 246, 0.12);
+  color: #e2ddff;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.875rem;
+  font-weight: 650;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.image-file-picker:hover .image-file-picker-button {
+  border-color: rgba(167, 139, 250, 0.58);
+  background: rgba(139, 92, 246, 0.22);
+}
+
+.image-file-picker:focus-within .image-file-picker-button {
+  outline: 2px solid #c4b5fd;
+  outline-offset: 3px;
+}
+
+.image-file-picker-name {
+  min-width: 0;
+  flex: 1 1 7rem;
+  overflow: hidden;
+  color: #9aa4b7;
+  font-size: 0.82rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .image-extra-controls input[type="color"] {
@@ -1095,6 +1151,18 @@ select:focus, input:focus {
 
   .image-extra-controls {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .image-qr-controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 380px) {
+  .image-pdf-controls {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 

@@ -19,6 +19,7 @@
   <!-- Language-specific landing pages -->
   {% for language, url in language_alternates %}
   <link rel="alternate" hreflang="{{ language }}" href="{{ url }}">
+  <meta property="og:locale:alternate" content="{{ {'ar':'ar_SA','en':'en_US','es':'es_ES','fr':'fr_FR','de':'de_DE','pt':'pt_BR','it':'it_IT','tr':'tr_TR','ru':'ru_RU','zh':'zh_CN','ja':'ja_JP','ko':'ko_KR','hi':'hi_IN'}[language] }}">
   {% endfor %}
   <link rel="alternate" hreflang="x-default" href="{{ site_url }}/">
 
