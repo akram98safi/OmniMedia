@@ -7,7 +7,7 @@
 
   <!-- SEO Core Meta Tags -->
   <meta name="description" data-i18n-content="meta_description" content="{{ seo_meta.meta_description }}">
-  <meta name="author" content="Nobaj Studio">
+  <meta name="author" content="OmniMedia Studio">
   {% if google_site_verification %}<meta name="google-site-verification" content="{{ google_site_verification }}">{% endif %}
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#8b5cf6">
@@ -25,14 +25,14 @@
 
   <!-- Open Graph (Facebook, LinkedIn, WhatsApp, Telegram) -->
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Nobaj Studio">
+  <meta property="og:site_name" content="OmniMedia Studio">
   <meta property="og:title" data-i18n-content="og_title" content="{{ seo_meta.og_title }}">
   <meta property="og:description" data-i18n-content="og_description" content="{{ seo_meta.og_description }}">
   <meta property="og:url" content="{{ canonical_url }}">
   <meta property="og:image" content="{{ site_url }}/static/img/og-cover.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Nobaj Studio — Online video and audio tools">
+  <meta property="og:image:alt" content="OmniMedia Studio — Online video and audio tools">
   <meta property="og:locale" content="{{ open_graph_locale }}">
 
   <!-- Twitter Card -->
@@ -51,7 +51,7 @@
   {
     "@context": "https://schema.org",
     "@type": ["WebApplication", "SoftwareApplication"],
-    "name": "Nobaj Studio",
+    "name": "OmniMedia Studio",
     "url": "{{ canonical_url }}",
     "description": {{ seo_meta.meta_description | tojson }},
     "applicationCategory": "MultimediaApplication",
@@ -71,7 +71,7 @@
     ],
     "creator": {
       "@type": "Organization",
-      "name": "Nobaj",
+      "name": "OmniMedia",
       "url": "{{ site_url }}"
     }
   }
@@ -86,7 +86,7 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <a href="/" class="flex items-center gap-2 group">
-          <img src="/static/img/logo.svg" alt="Nobaj Studio Logo" class="h-9 w-auto">
+          <img src="/static/img/logo.svg" alt="OmniMedia Studio Logo" class="h-9 w-auto">
         </a>
       </div>
 
@@ -538,7 +538,7 @@
     <div class="max-w-4xl mx-auto px-4 space-y-3">
       <p class="font-medium" data-i18n="footer_title">{{ translations['footer_title']|replace('{ttl}', file_ttl_minutes|string)|replace('{size}', max_upload_size_mb|string) }}</p>
       <p class="text-[11px] text-slate-600" data-i18n="footer_privacy" data-i18n-ttl="{{ file_ttl_minutes }}">{{ translations['footer_privacy']|replace('{ttl}', file_ttl_minutes|string)|replace('{size}', max_upload_size_mb|string) }}</p>
-      <p class="text-[10px] text-slate-700">&copy; {{ current_year }} Nobaj.com</p>
+      <p class="text-[10px] text-slate-700">&copy; {{ current_year }} OmniMedia.com</p>
       <nav class="flex flex-wrap justify-center gap-4" aria-label="{{ translations.footer_title }}">
         <a href="{{ '/ar' if page_language == 'ar' else '' }}/tools/video-compressor" class="hover:text-violet-300">{{ translations.tab_compress }}</a>
         <a href="{{ '/ar' if page_language == 'ar' else '' }}/tools/audio-extractor" class="hover:text-violet-300">{{ translations.tab_audio }}</a>
@@ -547,7 +547,7 @@
         <a href="{{ '/ar' if page_language == 'ar' else '' }}/privacy" data-i18n="footer_privacy_link" class="hover:text-violet-300">{{ translations['footer_privacy_link']|replace('{ttl}', file_ttl_minutes|string)|replace('{size}', max_upload_size_mb|string) }}</a>
         <a href="{{ '/ar' if page_language == 'ar' else '' }}/terms" data-i18n="footer_terms_link" class="hover:text-violet-300">{{ translations['footer_terms_link']|replace('{ttl}', file_ttl_minutes|string)|replace('{size}', max_upload_size_mb|string) }}</a>
         <a href="{{ '/ar' if page_language == 'ar' else '' }}/contact" data-i18n="footer_contact_link" class="hover:text-violet-300">{{ translations['footer_contact_link']|replace('{ttl}', file_ttl_minutes|string)|replace('{size}', max_upload_size_mb|string) }}</a>
-        <a href="https://github.com/akram98safi/Nobaj/issues" target="_blank" rel="noopener noreferrer" class="hover:text-violet-300">GitHub</a>
+        <a href="https://github.com/akram98safi/OmniMedia/issues" target="_blank" rel="noopener noreferrer" class="hover:text-violet-300">GitHub</a>
       </nav>
     </div>
   </footer>

@@ -11,7 +11,7 @@
   {% for code, url in alternates %}<link rel="alternate" hreflang="{{ code }}" href="{{ url }}">{% endfor %}
   <link rel="alternate" hreflang="x-default" href="{{ site_url }}/tools/image-tools">
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Nobaj">
+  <meta property="og:site_name" content="OmniMedia">
   <meta property="og:title" content="{{ t.image_page_title }}">
   <meta property="og:description" content="{{ t.image_page_description }}">
   <meta property="og:url" content="{{ canonical_url }}">
@@ -28,7 +28,7 @@
   <header class="site-header">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
       <a href="{{ language_path }}" class="font-bold text-white flex items-center gap-2">
-        <img src="/static/img/logo.svg" alt="Nobaj Studio" class="h-8 w-auto">
+        <img src="/static/img/logo.svg" alt="OmniMedia Studio" class="h-8 w-auto">
       </a>
       <label class="sr-only" for="image-language">{{ t.language_label }}</label>
       <select id="image-language" class="language-trigger" aria-label="{{ t.language_label }}">
@@ -43,7 +43,7 @@
       <span>{{ t.image_back_home }}</span>
     </a>
     <section class="text-center max-w-3xl mx-auto mb-10">
-      <p class="section-kicker">Nobaj Studio</p>
+      <p class="section-kicker">OmniMedia Studio</p>
       <h1 class="text-3xl sm:text-5xl font-black text-white mt-3">{{ t.image_heading }}</h1>
       <p class="text-slate-400 leading-7 mt-4">{{ t.image_intro }}</p>
       <nav class="image-tool-shortcuts mt-5" aria-label="{{ t.image_extra_tools }}">
@@ -158,7 +158,7 @@
 
     <section class="image-extra-tools mt-10" aria-label="{{ t.image_extra_tools }}">
       <div class="text-center mb-6">
-        <p class="section-kicker">Nobaj Studio</p>
+        <p class="section-kicker">OmniMedia Studio</p>
         <h2 class="text-2xl sm:text-3xl font-black text-white mt-2">{{ t.image_extra_tools }}</h2>
         <p class="text-sm text-slate-400 mt-2">{{ t.image_local_note }}</p>
       </div>
@@ -186,7 +186,7 @@
           <p id="qr-status" class="text-sm text-slate-300 mt-3 min-h-6" role="status" aria-live="polite"></p>
           <div id="qr-result" class="hidden image-extra-result mt-3">
             <canvas id="qr-preview" width="384" height="384" aria-label="{{ t.image_qr_preview }}"></canvas>
-            <a id="qr-download" class="btn-ghost inline-flex justify-center rounded-xl px-5 py-2.5" href="#" download="nobaj-qr.png">{{ t.image_qr_download }}</a>
+            <a id="qr-download" class="btn-ghost inline-flex justify-center rounded-xl px-5 py-2.5" href="#" download="omnimedia-qr.png">{{ t.image_qr_download }}</a>
           </div>
         </section>
 
@@ -230,7 +230,7 @@
           </div>
           <button id="pdf-generate" type="button" class="btn-violet rounded-xl px-5 py-3 mt-5">{{ t.image_pdf_generate }}</button>
           <p id="pdf-status" class="text-sm text-slate-300 mt-3 min-h-6" role="status" aria-live="polite"></p>
-          <a id="pdf-download" class="hidden btn-ghost inline-flex justify-center rounded-xl px-5 py-2.5 mt-2" href="#" download="nobaj-images.pdf">{{ t.image_pdf_download }}</a>
+          <a id="pdf-download" class="hidden btn-ghost inline-flex justify-center rounded-xl px-5 py-2.5 mt-2" href="#" download="omnimedia-images.pdf">{{ t.image_pdf_download }}</a>
         </section>
       </div>
     </section>
@@ -254,9 +254,9 @@
   </main>
 
   <footer class="border-t border-white/[0.06] bg-[#090a0d] py-7 text-center text-xs text-slate-500">
-    <p>&copy; {{ current_year }} Nobaj.com</p>
+    <p>&copy; {{ current_year }} OmniMedia.com</p>
     <nav class="flex flex-wrap justify-center gap-4 mt-3" aria-label="{{ t.footer_title }}">
-      <a href="{{ language_path }}" class="hover:text-violet-300">Nobaj</a>
+      <a href="{{ language_path }}" class="hover:text-violet-300">OmniMedia</a>
       <a href="{{ legal_links.privacy }}" class="hover:text-violet-300">{{ t.footer_privacy_link }}</a>
       <a href="{{ legal_links.terms }}" class="hover:text-violet-300">{{ t.footer_terms_link }}</a>
       <a href="{{ legal_links.contact }}" class="hover:text-violet-300">{{ t.footer_contact_link }}</a>

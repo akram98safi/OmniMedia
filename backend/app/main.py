@@ -1,4 +1,4 @@
-"""Main FastAPI entry point for Nobaj platform."""
+"""Main FastAPI entry point for OmniMedia platform."""
 
 import logging
 import json
@@ -24,7 +24,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 )
-logger = logging.getLogger("nobaj")
+logger = logging.getLogger("omnimedia")
 
 FRONTEND_DIR = Path(__file__).resolve().parent.parent.parent / "frontend"
 STATIC_DIR = FRONTEND_DIR / "static"
@@ -116,7 +116,7 @@ def localized_href(language: str, path: str = "") -> str:
 
 def preferred_language(request: Request) -> str:
     """Choose a saved language, then the best supported browser language."""
-    saved_language = request.cookies.get("nobaj_lang", "").lower()
+    saved_language = request.cookies.get("omni_lang", "").lower()
     if saved_language in SUPPORTED_LANGUAGES:
         return saved_language
 
@@ -141,7 +141,7 @@ def preferred_language(request: Request) -> str:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Lifespan context manager for startup and shutdown procedures."""
-    logger.info("Starting Nobaj media processing engine...")
+    logger.info("Starting OmniMedia processing engine...")
     settings.ensure_directories()
     analytics.db_path = settings.ANALYTICS_DB_PATH
     analytics.initialize()
@@ -154,7 +154,7 @@ async def lifespan(app: FastAPI):
 
     yield
 
-    logger.info("Shutting down Nobaj engine...")
+    logger.info("Shutting down OmniMedia engine...")
     await queue_manager.stop()
     await cleaner.stop()
 
@@ -216,7 +216,7 @@ async def index_page(request: Request):
 
 
 async def render_index_page(request: Request, language: str):
-    visitor_id = request.cookies.get("nobaj_visitor_id")
+    visitor_id = request.cookies.get("omni_visitor_id")
     if not visitor_id:
         import uuid
         visitor_id = uuid.uuid4().hex
@@ -264,7 +264,7 @@ async def render_index_page(request: Request, language: str):
         },
     )
     response.set_cookie(
-        "nobaj_visitor_id",
+        "omni_visitor_id",
         visitor_id,
         max_age=60 * 60 * 24 * 365,
         httponly=True,
@@ -272,7 +272,7 @@ async def render_index_page(request: Request, language: str):
         secure=request.url.scheme == "https" or request.headers.get("x-forwarded-proto") == "https",
     )
     response.set_cookie(
-        "nobaj_lang",
+        "omni_lang",
         language,
         max_age=60 * 60 * 24 * 365,
         httponly=True,
@@ -372,7 +372,7 @@ def tool_page_context(request: Request, language: str, slug: str):
         "tool_name": translations[tool["tab_key"]],
         "description": translations[tool["description_key"]],
         "setting_names": [translations[key] for key in tool["setting_keys"]],
-        "seo_title": f"{translations[tool['tab_key']]} | Nobaj",
+        "seo_title": f"{translations[tool['tab_key']]} | OmniMedia",
         "canonical_url": canonical_url,
         "site_url": settings.PUBLIC_BASE_URL.rstrip("/"),
         "alternates": [
@@ -446,7 +446,7 @@ async def render_image_page(request: Request, language: str):
     response.headers["Content-Language"] = language
     response.headers["Cache-Control"] = "private, no-store"
     response.set_cookie(
-        "nobaj_lang",
+        "omni_lang",
         language,
         max_age=60 * 60 * 24 * 365,
         httponly=True,
@@ -511,20 +511,20 @@ async def localized_tool_page(request: Request, language: str, slug: str):
 
 TRUST_COPY = {
     "en": {
-        "privacy": ("Privacy policy", "How Nobaj handles your media and basic usage data.", [
-            ("Media files", "Images processed with Nobaj Image Tools stay in your browser and are not uploaded. Video and audio files you submit for conversion are sent to the Nobaj server; temporary uploads and generated outputs are automatically removed after {ttl} minutes. Do not submit files you are not authorized to process."),
-            ("Basic analytics", "Nobaj uses a random visitor identifier cookie to estimate unique visits. When the landing page is opened, the service records its path and a shortened browser user-agent for first-party analytics. It does not store raw IP addresses. Analytics records are kept in the service database; no fixed deletion schedule is currently configured."),
+        "privacy": ("Privacy policy", "How OmniMedia handles your media and basic usage data.", [
+            ("Media files", "Images processed with OmniMedia Image Tools stay in your browser and are not uploaded. Video and audio files you submit for conversion are sent to the OmniMedia server; temporary uploads and generated outputs are automatically removed after {ttl} minutes. Do not submit files you are not authorized to process."),
+            ("Basic analytics", "OmniMedia uses a random visitor identifier cookie to estimate unique visits. When the landing page is opened, the service records its path and a shortened browser user-agent for first-party analytics. It does not store raw IP addresses. Analytics records are kept in the service database; no fixed deletion schedule is currently configured."),
             ("Cookies and external services", "A preference cookie remembers your language. Google AdSense may be loaded when configured. Third-party providers may receive standard connection data when your browser requests their resources."),
-            ("Questions", "For support, use the Nobaj project issue tracker linked on the Contact page. Do not include private media or sensitive information in a public report."),
+            ("Questions", "For support, use the OmniMedia project issue tracker linked on the Contact page. Do not include private media or sensitive information in a public report."),
         ]),
-        "terms": ("Terms of use", "Rules for using Nobaj media tools.", [
-            ("Use of the service", "Nobaj provides media conversion tools as available. You are responsible for having the rights and permissions needed to upload and process each file."),
+        "terms": ("Terms of use", "Rules for using OmniMedia media tools.", [
+            ("Use of the service", "OmniMedia provides media conversion tools as available. You are responsible for having the rights and permissions needed to upload and process each file."),
             ("Limits and availability", "Upload size, media duration, queue capacity, and supported formats are limited by the values shown by the service. Processing may fail or be temporarily unavailable; keep your original files."),
             ("Your files", "You retain responsibility for the files you submit and the results you download. Temporary inputs and outputs are automatically removed after {ttl} minutes. Do not use the service to violate others’ rights or applicable law."),
-            ("Changes", "Nobaj may change or discontinue features to maintain the service. Use of the site means you agree to these terms and the Privacy Policy."),
+            ("Changes", "OmniMedia may change or discontinue features to maintain the service. Use of the site means you agree to these terms and the Privacy Policy."),
         ]),
-        "contact": ("Contact Nobaj", "Get help or report a problem with the service.", [
-            ("Project support", "Nobaj does not have a public support email at this time. For questions and bug reports, open an issue in the project repository. Please do not post personal data or private media files."),
+        "contact": ("Contact OmniMedia", "Get help or report a problem with the service.", [
+            ("Project support", "OmniMedia does not have a public support email at this time. For questions and bug reports, open an issue in the project repository. Please do not post personal data or private media files."),
         ]),
     },
     "ar": {

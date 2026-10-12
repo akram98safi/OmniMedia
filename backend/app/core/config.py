@@ -7,7 +7,7 @@ from backend.app.core.constants import UPLOAD_DIR, OUTPUT_DIR, TEMP_DIR, BASE_DI
 
 
 class Settings(BaseSettings):
-    """Nobaj configuration parameters."""
+    """OmniMedia Studio configuration parameters."""
 
     model_config = SettingsConfigDict(
         env_file=str(BASE_DIR / ".env"),
@@ -16,9 +16,9 @@ class Settings(BaseSettings):
     )
 
     # General
-    APP_NAME: str = "Nobaj Media Cloud"
-    APP_DESCRIPTION: str = "All-in-One Online Video, Audio & Image Processing Cloud Suite"
-    PUBLIC_BASE_URL: str = "https://nobaj.com"
+    APP_NAME: str = "OmniMedia Studio"
+    APP_DESCRIPTION: str = "Turnkey All-in-One Online Video, Audio & Image Processing Suite"
+    PUBLIC_BASE_URL: str = "https://omnimedia.app"
     VERSION: str = "1.0.0"
     DEBUG: bool = False
     ADMIN_TOKEN: str = ""  # Required to access /admin and /api/stats/admin

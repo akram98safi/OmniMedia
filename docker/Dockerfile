@@ -1,4 +1,4 @@
-# Multi-stage Dockerfile for Nobaj Media Platform
+# Multi-stage Dockerfile for OmniMedia Media Platform
 FROM python:3.11-slim-bookworm AS base
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -27,10 +27,10 @@ COPY frontend /app/frontend
 
 # Create data directories with appropriate permissions
 RUN mkdir -p /app/data/uploads /app/data/outputs /app/data/temp && \
-    useradd -m -u 1000 nobaj && \
-    chown -R nobaj:nobaj /app
+    useradd -m -u 1000 omnimedia && \
+    chown -R omnimedia:omnimedia /app
 
-USER nobaj
+USER omnimedia
 
 EXPOSE 8000
 

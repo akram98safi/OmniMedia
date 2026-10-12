@@ -1,12 +1,12 @@
 /**
- * Nobaj - Next-Gen Media Tools Platform
+ * OmniMedia - Next-Gen Media Tools Platform
  * Interactive Client Application
  */
 
 // --- Global State ---
 let currentLang = document.documentElement.dataset.pageLanguage || 'en';
 try {
-  currentLang = document.documentElement.dataset.pageLanguage || localStorage.getItem('nobaj_lang') || 'en';
+  currentLang = document.documentElement.dataset.pageLanguage || localStorage.getItem('omni_lang') || 'en';
 } catch (error) {
   // The app remains usable when browser storage is disabled.
 }
@@ -55,10 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function sendVisitorHeartbeat() {
   try {
-    let visitorId = localStorage.getItem('nobaj_visitor_id');
+    let visitorId = localStorage.getItem('omni_visitor_id');
     if (!visitorId) {
       visitorId = 'v_' + Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
-      localStorage.setItem('nobaj_visitor_id', visitorId);
+      localStorage.setItem('omni_visitor_id', visitorId);
     }
     const payload = JSON.stringify({
       visitor_id: visitorId,
@@ -89,7 +89,7 @@ function setupLanguage() {
     if (!document.querySelector(`.language-option[data-lang="${lang}"]`)) lang = 'en';
     currentLang = lang;
     try {
-      localStorage.setItem('nobaj_lang', lang);
+      localStorage.setItem('omni_lang', lang);
     } catch (error) {
       // Language selection still applies for this page even without storage.
     }
@@ -153,7 +153,7 @@ function setupLanguage() {
     option.addEventListener('click', () => {
       const selectedLanguage = option.dataset.lang;
       try {
-        localStorage.setItem('nobaj_lang', selectedLanguage);
+        localStorage.setItem('omni_lang', selectedLanguage);
       } catch (error) {
         // The language switch still works when browser storage is disabled.
       }

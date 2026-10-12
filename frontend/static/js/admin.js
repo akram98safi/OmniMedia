@@ -1,6 +1,6 @@
-/* Nobaj private analytics dashboard. */
+/* OmniMedia private analytics dashboard. */
 
-const tokenStorageKey = 'nobaj_admin_token';
+const tokenStorageKey = 'omni_admin_token';
 let adminToken = '';
 let adminTranslations = {};
 
@@ -10,7 +10,7 @@ function adminText(key, values = {}) {
 
 async function loadAdminTranslations() {
   let lang = 'en';
-  try { lang = localStorage.getItem('nobaj_lang') || 'en'; } catch (error) {}
+  try { lang = localStorage.getItem('omni_lang') || 'en'; } catch (error) {}
   try {
     const version = document.documentElement.dataset.langVersion || '';
     const response = await fetch(`/static/lang/${encodeURIComponent(lang)}.json?v=${encodeURIComponent(version)}`);

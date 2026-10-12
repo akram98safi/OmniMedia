@@ -11,7 +11,7 @@
   {% for code, url in alternates %}<link rel="alternate" hreflang="{{ code }}" href="{{ url }}">{% endfor %}
   <link rel="alternate" hreflang="x-default" href="{{ site_url }}/tools/{{ request.path.rsplit('/', 1)[-1] }}">
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Nobaj">
+  <meta property="og:site_name" content="OmniMedia">
   <meta property="og:title" content="{{ seo_title }}">
   <meta property="og:description" content="{{ description }}">
   <meta property="og:url" content="{{ canonical_url }}">
@@ -28,7 +28,7 @@
   <header class="site-header">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
       <a href="{{ language_path }}" class="font-bold text-white flex items-center gap-2">
-        <img src="/static/img/logo.svg" alt="Nobaj Studio" class="h-8 w-auto">
+        <img src="/static/img/logo.svg" alt="OmniMedia Studio" class="h-8 w-auto">
       </a>
       <label class="sr-only" for="language-select">{{ translations.language_label }}</label>
       <select id="language-select" class="language-trigger" onchange="if(this.value) window.location.href=this.value">
@@ -42,7 +42,7 @@
       <span>{{ translations.image_back_home }}</span>
     </a>
     <article class="studio-panel admin-panel rounded-3xl p-6 sm:p-10">
-      <p class="section-kicker">Nobaj Studio</p>
+      <p class="section-kicker">OmniMedia Studio</p>
       <h1 class="text-3xl sm:text-5xl font-black text-white mt-3">{{ tool_name }}</h1>
       <p class="text-slate-300 leading-8 mt-5 max-w-3xl">{{ description }}</p>
       <p class="text-sm text-slate-400 leading-6 mt-5">{{ translations.tool_limit | replace('{size}', max_upload_size_mb|string) | replace('{duration}', max_duration_minutes|string) }}</p>
@@ -71,9 +71,9 @@
     </nav>
   </main>
   <footer class="border-t border-white/[0.06] bg-[#090a0d] py-7 text-center text-xs text-slate-500">
-    <p>&copy; {{ current_year }} Nobaj.com</p>
-    <a href="{{ language_path }}" class="inline-block mt-3 hover:text-violet-300">Nobaj</a>
+    <p>&copy; {{ current_year }} OmniMedia.com</p>
+    <a href="{{ language_path }}" class="inline-block mt-3 hover:text-violet-300">OmniMedia</a>
   </footer>
-  <script type="application/ld+json">{{ {"@context": "https://schema.org", "@type": "WebPage", "name": seo_title, "description": description, "url": canonical_url, "inLanguage": language, "isPartOf": {"@type": "WebSite", "name": "Nobaj", "url": site_url}} | tojson }}</script>
+  <script type="application/ld+json">{{ {"@context": "https://schema.org", "@type": "WebPage", "name": seo_title, "description": description, "url": canonical_url, "inLanguage": language, "isPartOf": {"@type": "WebSite", "name": "OmniMedia", "url": site_url}} | tojson }}</script>
 </body>
 </html>

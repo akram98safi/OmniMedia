@@ -1,4 +1,4 @@
-"""Application constants and default configurations for Nobaj."""
+"""Application constants and default configurations for OmniMedia Studio."""
 
 from pathlib import Path
 

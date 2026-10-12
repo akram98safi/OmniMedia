@@ -216,7 +216,7 @@
     if (outputUrl) URL.revokeObjectURL(outputUrl);
     outputUrl = URL.createObjectURL(blob);
     const extension = mimeType === 'image/jpeg' ? 'jpg' : mimeType.split('/')[1];
-    const safeName = sourceFile.name.replace(/\.[^.]*$/, '').replace(/[^a-zA-Z0-9_-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 72) || 'nobaj-image';
+    const safeName = sourceFile.name.replace(/\.[^.]*$/, '').replace(/[^a-zA-Z0-9_-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 72) || 'omnimedia-image';
     outputLink.href = outputUrl;
     outputLink.download = `${safeName}-${mode}.${extension}`;
     document.getElementById('image-result-name').textContent = outputLink.download;

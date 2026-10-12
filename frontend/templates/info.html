@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ title }} | Nobaj</title>
+  <title>{{ title }} | OmniMedia</title>
   <meta name="description" content="{{ description }}">
   <meta name="robots" content="index,follow">
   <link rel="canonical" href="{{ canonical_url }}">
   {% for code, url in alternates %}<link rel="alternate" hreflang="{{ code }}" href="{{ url }}">{% endfor %}
   <link rel="alternate" hreflang="x-default" href="{{ default_url }}">
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Nobaj">
-  <meta property="og:title" content="{{ title }} | Nobaj">
+  <meta property="og:site_name" content="OmniMedia">
+  <meta property="og:title" content="{{ title }} | OmniMedia">
   <meta property="og:description" content="{{ description }}">
   <meta property="og:url" content="{{ canonical_url }}">
   <meta property="og:image" content="{{ site_url }}/static/img/og-cover.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="{{ title }} | Nobaj">
+  <meta name="twitter:title" content="{{ title }} | OmniMedia">
   <meta name="twitter:description" content="{{ description }}">
   <meta name="twitter:image" content="{{ site_url }}/static/img/og-cover.png">
   <link rel="icon" href="/static/img/favicon-32.png" sizes="32x32" type="image/png">
@@ -26,7 +26,7 @@
   <header class="site-header">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
       <a href="{{ language_path }}" class="font-bold text-white flex items-center gap-2">
-        <img src="/static/img/logo.svg" alt="Nobaj Studio" class="h-8 w-auto">
+        <img src="/static/img/logo.svg" alt="OmniMedia Studio" class="h-8 w-auto">
       </a>
       <label class="sr-only" for="page-language">{{ translations.language_label }}</label>
       <select id="page-language" class="language-trigger" onchange="if(this.value) window.location.href=this.value">
@@ -40,14 +40,14 @@
       <span>{{ translations.image_back_home }}</span>
     </a>
     <article class="studio-panel admin-panel rounded-3xl p-6 sm:p-10">
-      <p class="section-kicker">Nobaj Studio</p>
+      <p class="section-kicker">OmniMedia Studio</p>
       <h1 class="text-3xl sm:text-4xl font-black text-white mt-3">{{ title }}</h1>
       <p class="text-slate-400 leading-7 mt-3">{{ description }}</p>
       {% if page == 'contact' %}
       <section class="studio-card rounded-2xl p-6 mt-8">
         <h2 class="text-xl font-bold text-white">{{ sections[0][0] }}</h2>
         <p class="text-slate-300 leading-8 mt-3">{{ sections[0][1] }}</p>
-        <a class="btn-violet inline-flex px-5 py-3 rounded-xl mt-5" href="https://github.com/akram98safi/Nobaj/issues" target="_blank" rel="noopener noreferrer">{{ 'Open a support issue' if language == 'en' else 'فتح بلاغ دعم على GitHub' }}</a>
+        <a class="btn-violet inline-flex px-5 py-3 rounded-xl mt-5" href="https://github.com/akram98safi/OmniMedia/issues" target="_blank" rel="noopener noreferrer">{{ 'Open a support issue' if language == 'en' else 'فتح بلاغ دعم على GitHub' }}</a>
       </section>
       {% else %}
       <div class="space-y-7 mt-8">
@@ -62,9 +62,9 @@
     </article>
   </main>
   <footer class="border-t border-white/[0.06] bg-[#090a0d] py-7 text-center text-xs text-slate-500">
-    <p>&copy; {{ current_year }} Nobaj.com</p>
+    <p>&copy; {{ current_year }} OmniMedia.com</p>
     <nav class="flex flex-wrap justify-center gap-4 mt-3" aria-label="{{ translations.footer_title }}">
-      <a href="{{ language_path }}" class="hover:text-violet-300">Nobaj</a>
+      <a href="{{ language_path }}" class="hover:text-violet-300">OmniMedia</a>
       <a href="{{ language_path.rstrip('/') }}/privacy" class="hover:text-violet-300">{{ translations.footer_privacy_link }}</a>
       <a href="{{ language_path.rstrip('/') }}/terms" class="hover:text-violet-300">{{ translations.footer_terms_link }}</a>
       <a href="{{ language_path.rstrip('/') }}/contact" class="hover:text-violet-300">{{ translations.footer_contact_link }}</a>
