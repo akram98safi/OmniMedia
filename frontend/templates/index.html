@@ -7,7 +7,7 @@
 
   <!-- SEO Core Meta Tags -->
   <meta name="description" data-i18n-content="meta_description" content="{{ seo_meta.meta_description }}">
-  <meta name="author" content="OmniMedia Studio">
+  <meta name="author" content="OmniMedia">
   {% if google_site_verification %}<meta name="google-site-verification" content="{{ google_site_verification }}">{% endif %}
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#8b5cf6">
@@ -25,14 +25,14 @@
 
   <!-- Open Graph (Facebook, LinkedIn, WhatsApp, Telegram) -->
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="OmniMedia Studio">
+  <meta property="og:site_name" content="OmniMedia">
   <meta property="og:title" data-i18n-content="og_title" content="{{ seo_meta.og_title }}">
   <meta property="og:description" data-i18n-content="og_description" content="{{ seo_meta.og_description }}">
   <meta property="og:url" content="{{ canonical_url }}">
   <meta property="og:image" content="{{ site_url }}/static/img/og-cover.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="OmniMedia Studio — Online video and audio tools">
+  <meta property="og:image:alt" content="OmniMedia — Online video and audio tools">
   <meta property="og:locale" content="{{ open_graph_locale }}">
 
   <!-- Twitter Card -->
@@ -51,7 +51,7 @@
   {
     "@context": "https://schema.org",
     "@type": ["WebApplication", "SoftwareApplication"],
-    "name": "OmniMedia Studio",
+    "name": "OmniMedia",
     "url": "{{ canonical_url }}",
     "description": {{ seo_meta.meta_description | tojson }},
     "applicationCategory": "MultimediaApplication",
@@ -86,7 +86,7 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <a href="/" class="flex items-center gap-2 group">
-          <img src="/static/img/logo.svg" alt="OmniMedia Studio Logo" class="h-9 w-auto">
+          <img src="/static/img/logo.svg" alt="OmniMedia Logo" class="h-9 w-auto">
         </a>
       </div>
 

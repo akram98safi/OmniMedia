@@ -26,7 +26,7 @@
   <header class="site-header">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
       <a href="{{ language_path }}" class="font-bold text-white flex items-center gap-2">
-        <img src="/static/img/logo.svg" alt="OmniMedia Studio" class="h-8 w-auto">
+        <img src="/static/img/logo.svg" alt="OmniMedia" class="h-8 w-auto">
       </a>
       <label class="sr-only" for="page-language">{{ translations.language_label }}</label>
       <select id="page-language" class="language-trigger" onchange="if(this.value) window.location.href=this.value">
@@ -40,7 +40,7 @@
       <span>{{ translations.image_back_home }}</span>
     </a>
     <article class="studio-panel admin-panel rounded-3xl p-6 sm:p-10">
-      <p class="section-kicker">OmniMedia Studio</p>
+      <p class="section-kicker">OmniMedia</p>
       <h1 class="text-3xl sm:text-4xl font-black text-white mt-3">{{ title }}</h1>
       <p class="text-slate-400 leading-7 mt-3">{{ description }}</p>
       {% if page == 'contact' %}

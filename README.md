@@ -1,4 +1,4 @@
-# 🎬 OmniMedia Studio — Turnkey All-in-One Media & Compression SaaS
+# 🎬 OmniMedia — Turnkey All-in-One Media & Compression SaaS
 
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?style=flat&logo=fastapi)](https://fastapi.tiangolo.com/)
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat&logo=python)](https://www.python.org/)
@@ -6,7 +6,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat&logo=docker)](https://www.docker.com/)
 
-**OmniMedia Studio** is a modern, production-ready, self-hosted Micro-SaaS platform for high-performance online media processing. Users can compress videos, extract studio-grade audio tracks, convert clips to high-fidelity GIFs, and utilize a complete suite of browser-based image utilities.
+**OmniMedia** is a modern, production-ready, self-hosted Micro-SaaS platform for high-performance online media processing. Users can compress videos, extract studio-grade audio tracks, convert clips to high-fidelity GIFs, and utilize a complete suite of browser-based image utilities.
 
 ---
 
@@ -134,7 +134,7 @@
 
 | Variable | Default | Description |
 | :--- | :--- | :--- |
-| `APP_NAME` | `OmniMedia Studio` | Platform display name |
+| `APP_NAME` | `OmniMedia` | Platform display name |
 | `PUBLIC_BASE_URL` | `https://yourdomain.com` | Base URL used for canonical links and sitemaps |
 | `ADMIN_TOKEN` | *Random Hex* | Password to unlock `/admin` analytics dashboard |
 | `MAX_UPLOAD_SIZE_MB` | `500` | Maximum file upload limit in megabytes |

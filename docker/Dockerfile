@@ -1,4 +1,4 @@
-# Multi-stage Dockerfile for OmniMedia Media Platform
+# Multi-stage Dockerfile for OmniMedia Platform
 FROM python:3.11-slim-bookworm AS base
 
 ENV PYTHONDONTWRITEBYTECODE=1 \

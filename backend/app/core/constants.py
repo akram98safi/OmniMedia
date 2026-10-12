@@ -1,4 +1,4 @@
-"""Application constants and default configurations for OmniMedia Studio."""
+"""Application constants and default configurations for OmniMedia."""
 
 from pathlib import Path
 

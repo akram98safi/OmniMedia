@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# Nobaj Platform - Automated Hetzner Server Setup Script
+# OmniMedia Platform - Automated Hetzner Server Setup Script
 # Works on Ubuntu 22.04 LTS / 24.04 LTS
 # ==============================================================================
 
 set -e
 
 echo "=========================================================="
-echo "    🚀 Nobaj Media Tools - Hetzner Server Provisioning   "
+echo "    🚀 OmniMedia - Hetzner Server Provisioning   "
 echo "=========================================================="
 
 # Check root privileges
@@ -57,11 +57,11 @@ elif ! grep -q "^ADMIN_TOKEN=.\+" .env; then
     echo "✅ Added a freshly generated ADMIN_TOKEN to the existing .env."
 fi
 
-echo "🚀 Step 5: Building and Starting Nobaj with Docker Compose..."
+echo "🚀 Step 5: Building and Starting OmniMedia with Docker Compose..."
 docker compose --profile production up -d --build
 
 echo "=========================================================="
-echo "    🎉 Nobaj has been successfully deployed!             "
+echo "    🎉 OmniMedia has been successfully deployed!             "
 echo "=========================================================="
 echo "Access your instance at: http://$(curl -fsS --max-time 5 https://api.ipify.org || echo '<SERVER_IP>')"
 echo "Check container status: docker compose ps"

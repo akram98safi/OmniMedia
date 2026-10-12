@@ -7,7 +7,7 @@ from backend.app.core.constants import UPLOAD_DIR, OUTPUT_DIR, TEMP_DIR, BASE_DI
 
 
 class Settings(BaseSettings):
-    """OmniMedia Studio configuration parameters."""
+    """OmniMedia configuration parameters."""
 
     model_config = SettingsConfigDict(
         env_file=str(BASE_DIR / ".env"),
@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     )
 
     # General
-    APP_NAME: str = "OmniMedia Studio"
+    APP_NAME: str = "OmniMedia"
     APP_DESCRIPTION: str = "Turnkey All-in-One Online Video, Audio & Image Processing Suite"
     PUBLIC_BASE_URL: str = "https://omnimedia.app"
     VERSION: str = "1.0.0"
