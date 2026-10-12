@@ -147,4 +147,4 @@
 
 ## 📄 License & Commercial Rights
 
-This source code is ready for commercial deployment, white-label customization, or reselling as a standalone SaaS product.
+Versions first published on or after October 12, 2026 are licensed under the OmniMedia Commercial License in `LICENSE`. A purchased license permits commercial use and deployment in one product, website, or service, but does not permit redistributing or reselling the source code. Earlier versions distributed with the MIT License remain subject to that license.
